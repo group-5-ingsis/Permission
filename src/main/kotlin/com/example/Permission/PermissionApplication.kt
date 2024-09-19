@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class PermissionApplication
 
 fun main(args: Array<String>) {
-	runApplication<PermissionApplication>(*args)
+  runApplication<PermissionApplication>(*args)
 }
