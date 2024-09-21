@@ -1,9 +1,9 @@
-package com.example.Permission
+package com.example.permission
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+@SpringBootTest(classes = [com.example.permission.app.PermissionApplication::class])
 class PermissionApplicationTests {
 
 	@Test
