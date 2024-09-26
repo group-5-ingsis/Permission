@@ -24,9 +24,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    runtimeOnly 'org.postgresql:postgresql'
 }
 
 tasks.named('test') {
@@ -47,7 +50,6 @@ kover {
 koverReport {
     verify {
         rule {
-            name = 'Minimal line coverage rate'
             bound {
                 minValue = 80
             }
