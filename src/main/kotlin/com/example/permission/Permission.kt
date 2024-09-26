@@ -1,4 +1,4 @@
-package com.example.permission.app
+package com.example.permission
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -9,5 +9,5 @@ import org.springframework.context.annotation.ComponentScan
 class PermissionApplication
 
 fun main(args: Array<String>) {
-  runApplication<PermissionApplication>(*args)
+    runApplication<PermissionApplication>(*args)
 }
