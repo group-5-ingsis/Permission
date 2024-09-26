@@ -54,6 +54,11 @@ koverReport {
                 minValue = 80
             }
         }
+        filters {
+            excludes {
+                packages("config")
+            }
+        }
     }
 
     defaults {

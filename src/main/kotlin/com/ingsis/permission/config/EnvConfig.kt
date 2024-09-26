@@ -1,4 +1,4 @@
-package com.ingsis.permission.configuration
+package com.ingsis.permission.config
 
 import io.github.cdimascio.dotenv.Dotenv
 import jakarta.annotation.PostConstruct

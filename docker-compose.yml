@@ -1,5 +1,6 @@
 services:
   permission:
+    container_name: permission
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -13,6 +14,7 @@ services:
       - "8083:8083"
 
   permission-postgres-db:
+    container_name: permission-db
     image: postgres:latest
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
