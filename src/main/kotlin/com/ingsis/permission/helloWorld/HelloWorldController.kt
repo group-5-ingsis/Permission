@@ -1,4 +1,4 @@
-package com.example.permission.controller
+package com.ingsis.permission.helloWorld
 
 import org.springframework.web.bind.annotation.*
 
@@ -11,8 +11,7 @@ class HelloWorldController {
     }
 
     @PostMapping("/receive-message")
-    fun receiveMessage(@RequestBody message: String): String {
-        println("Server B received message: $message")
+    fun receiveMessage(): String {
         return "Hello from Permission server!"
     }
 }

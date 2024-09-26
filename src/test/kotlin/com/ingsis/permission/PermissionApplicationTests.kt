@@ -1,4 +1,4 @@
-package com.example.permission
+package com.ingsis.permission
 
 import org.junit.jupiter.api.Test
 
