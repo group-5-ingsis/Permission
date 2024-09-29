@@ -11,7 +11,7 @@ data class User(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long,
 
     @Column(unique = true, nullable = false)
     val username: String,
@@ -21,11 +21,4 @@ data class User(
 
     val password: String
 
-) {
-    constructor() : this(
-        id = null,
-        username = "",
-        email = "",
-        password = ""
-    )
-}
+)

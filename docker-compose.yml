@@ -10,8 +10,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:
       - permission-postgres-db
+    env_file:
+      - ./.env
     ports:
-      - "8083:8083"
+      - ${APP_PORT}:${APP_PORT}
 
   permission-postgres-db:
     container_name: permission-db
@@ -20,10 +22,12 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    env_file:
+      - ./.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - ${DB_PORT}:${DB_PORT}
 
 volumes:
   postgres_data:

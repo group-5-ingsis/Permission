@@ -6,4 +6,5 @@ POSTGRES_DB=<your-db-name>
 POSTGRES_USER=<your-db-username>
 POSTGRES_PASSWORD=<your-db-password>
 
-PORT=<your-port>
+APP_PORT=<your-app-port>
+DB_PORT=<your-db-port>
