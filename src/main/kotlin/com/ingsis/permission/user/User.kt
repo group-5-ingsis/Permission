@@ -12,17 +12,16 @@ import jakarta.persistence.Table
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long,
+    var id: Long = 0,
 
     @Column(unique = true, nullable = false)
-    var username: String,
+    var username: String = "",
 
     @Column(unique = true, nullable = false)
-    var email: String,
+    var email: String = "",
 
     @Column(nullable = false)
-    var password: String
+    var password: String = ""
 ) {
-    constructor() : this(0, "", "", "")
     constructor(username: String, email: String, password: String) : this(0, username, email, password)
 }
