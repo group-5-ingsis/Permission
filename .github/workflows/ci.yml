@@ -29,8 +29,17 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Clean Gradle
+        run: ./gradlew clean
+
+      - name: Coverage
+        run: ./gradlew koverVerify
+
+      - name: Formatting/Lint
+        run: ./gradlew ktlintCheck
+        
+      - name: Tests
+        run: ./gradlew test
 
       - name: Auto-merge if approved and passing
         if: ${{ github.event.pull_request.mergeable == true && github.event.pull_request.reviewDecision == 'approved' }}
