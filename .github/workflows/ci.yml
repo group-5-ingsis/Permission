@@ -32,17 +32,8 @@ jobs:
       - name: Clean Gradle
         run: ./gradlew clean
 
-      - name: Coverage
-        run: ./gradlew koverVerify
-
-      - name: Formatting/Lint
+      - name: Formatting/Linting
         run: ./gradlew ktlintCheck
-        
-      - name: Tests
-        run: ./gradlew test
 
-      - name: Auto-merge if approved and passing
-        if: ${{ github.event.pull_request.mergeable == true && github.event.pull_request.reviewDecision == 'approved' }}
-        run: gh pr merge ${{ github.event.pull_request.number }} --merge
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tests
+        run: ./gradlew koverVerify
