@@ -4,7 +4,7 @@ import com.ingsis.permission.user.User
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class UserTest {
+class UserConstructorTest {
 
     @Test
     fun `should create user with specified attributes`() {
