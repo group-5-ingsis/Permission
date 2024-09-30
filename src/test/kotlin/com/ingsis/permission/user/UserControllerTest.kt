@@ -1,9 +1,6 @@
-package user
+package com.ingsis.permission.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.ingsis.permission.user.User
-import com.ingsis.permission.user.UserDto
-import com.ingsis.permission.user.UserRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,8 +19,10 @@ class UserControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
+    @Autowired
     private lateinit var objectMapper: ObjectMapper
 
+    @Autowired
     private lateinit var userRepository: UserRepository
 
     @BeforeEach

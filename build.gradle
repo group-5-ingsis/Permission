@@ -82,3 +82,7 @@ koverReport {
 ktlint {
     disabledRules = ['no-wildcard-imports', 'max-line-length']
 }
+
+test {
+    jvmArgs("-XX:+EnableDynamicAgentLoading", "-Djdk.instrument.traceUsage", "-Xshare:off")
+}

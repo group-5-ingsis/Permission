@@ -1,6 +1,5 @@
-package helloWorld
+package com.ingsis.permission.helloWorld
 
-import com.ingsis.permission.helloWorld.HelloWorldController
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
