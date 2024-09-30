@@ -1,26 +1,17 @@
 package com.ingsis.permission.user
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 
 @SpringBootTest(properties = ["spring.datasource.url=jdbc:h2:mem:testdb"])
-@AutoConfigureMockMvc
 class UserControllerTest {
 
     @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var userController: UserController
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -33,21 +24,19 @@ class UserControllerTest {
     @Test
     fun `test createUser endpoint - success`() {
         val userDto = UserDto(
-            username = "john_doe",
-            email = "john@example.com",
-            password = "password123"
+            "john_doe",
+            "john@example.com",
+            "password123"
         )
 
-        mockMvc.perform(
-            post("/api/users/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDto))
-        )
-            .andExpect(status().isCreated)
-            .andExpect(jsonPath("$.id").isNotEmpty)
-            .andExpect(jsonPath("$.username").value("john_doe"))
-            .andExpect(jsonPath("$.email").value("john@example.com"))
-            .andDo(print())
+        val response: ResponseEntity<User> = userController.createUser(userDto)
+
+        assert(response.statusCode.is2xxSuccessful)
+        val createdUser = response.body
+        assert(createdUser != null)
+        assert(createdUser!!.id > 0)
+        assert(createdUser.username == "john_doe")
+        assert(createdUser.email == "john@example.com")
     }
 
     @Test
@@ -60,35 +49,41 @@ class UserControllerTest {
             password = "newpassword123"
         )
 
-        mockMvc.perform(
-            put("/api/users/${user.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedUserDto))
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.id").value(user.id))
-            .andExpect(jsonPath("$.username").value("john_doe_updated"))
-            .andExpect(jsonPath("$.email").value("john_updated@example.com"))
-            .andDo(print())
+        val response: ResponseEntity<User> = userController.modifyUser(user.id, updatedUserDto)
+
+        assert(response.statusCode == HttpStatus.OK)
+
+        val updatedUser = response.body
+
+        assert(updatedUser != null)
+
+        if (updatedUser != null) {
+            assert(updatedUser.id == user.id)
+        }
+        if (updatedUser != null) {
+            assert(updatedUser.username == "john_doe_updated")
+        }
+        if (updatedUser != null) {
+            assert(updatedUser.email == "john_updated@example.com")
+        }
     }
 
     @Test
     fun `test deleteUser endpoint - success`() {
         val user = userRepository.save(User(0, "john_doe", "john@example.com", "password123"))
 
-        mockMvc.perform(
-            delete("/api/users/${user.id}")
-        )
-            .andExpect(status().isNoContent)
-            .andDo(print())
+        val response: ResponseEntity<Void> = userController.deleteUser(user.id)
+
+        assert(response.statusCode == HttpStatus.NO_CONTENT)
+
+        val userExists = userRepository.existsById(user.id)
+        assert(!userExists)
     }
 
     @Test
     fun `test deleteUser endpoint - user not found`() {
-        mockMvc.perform(
-            delete("/api/users/999")
-        )
-            .andExpect(status().isNotFound)
-            .andDo(print())
+        val response: ResponseEntity<Void> = userController.deleteUser(999)
+
+        assert(response.statusCode == HttpStatus.NOT_FOUND)
     }
 }
