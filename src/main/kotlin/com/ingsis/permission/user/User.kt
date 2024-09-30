@@ -8,17 +8,18 @@ import jakarta.persistence.Id
 
 @Entity
 data class User(
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    var id: Long,
 
     @Column(unique = true, nullable = false)
-    val username: String,
+    var username: String,
 
     @Column(unique = true, nullable = false)
-    val email: String,
+    var email: String,
 
-    val password: String
-
-)
+    @Column(nullable = false)
+    var password: String
+) {
+    constructor() : this(0, "", "", "")
+}

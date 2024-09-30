@@ -12,7 +12,7 @@ class UserTest {
         val email = "test@example.com"
         val password = "securePassword"
 
-        val user = User(username = username, email = email, password = password)
+        val user = User(0, username, email, password)
 
         assertEquals(username, user.username)
         assertEquals(email, user.email)
@@ -23,7 +23,7 @@ class UserTest {
     fun `should create user with default constructor`() {
         val user = User()
 
-        assertEquals(null, user.id)
+        assertEquals(0, user.id)
         assertEquals("", user.username)
         assertEquals("", user.email)
         assertEquals("", user.password)
