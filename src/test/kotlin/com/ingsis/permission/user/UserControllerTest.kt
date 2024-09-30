@@ -7,12 +7,15 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
-import org.testcontainers.junit.jupiter.Testcontainers
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Testcontainers
 class UserControllerTest {
+
+    @BeforeEach
+    fun resetDatabase() {
+        userRepository.deleteAll()
+    }
 
     @Autowired
     private lateinit var userController: UserController
@@ -21,11 +24,6 @@ class UserControllerTest {
     private lateinit var userRepository: UserRepository
 
     private var createdUserId: Long? = null
-
-    @BeforeEach
-    fun setup() {
-        userRepository.deleteAll()
-    }
 
     @Test
     fun `test createUser endpoint - success`() {
