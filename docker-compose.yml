@@ -11,7 +11,7 @@ services:
     depends_on:
       - permission-postgres-db
     env_file:
-      - src/main/resources/.env
+      - ./src/main/resources/.env
     ports:
       - ${APP_PORT}:${APP_PORT}
 
@@ -23,7 +23,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     env_file:
-      - src/main/resources/.env
+      - ./src/main/resources/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

@@ -5,6 +5,6 @@ WORKDIR /home/gradle/src
 
 RUN ./gradlew build
 
-EXPOSE ${PORT:-8083}
+EXPOSE ${APP_PORT}
 
-ENTRYPOINT ["java", "-jar", "/home/gradle/src/build/libs/Permission.jar"]
+ENTRYPOINT ["java", "-jar", "$(ls /home/gradle/src/build/libs/*.jar | tail -n 1)"]

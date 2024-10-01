@@ -1,0 +1,5 @@
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/<your-db-name>
+SPRING_DATASOURCE_USERNAME=<your-db-username>
+SPRING_DATASOURCE_PASSWORD=<your-db-password>
+
+APP_PORT=<your-app-port>
