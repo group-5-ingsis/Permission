@@ -7,4 +7,4 @@ RUN ./gradlew build
 
 EXPOSE ${APP_PORT}
 
-ENTRYPOINT ["java", "-jar", "$(ls /home/gradle/src/build/libs/*.jar | tail -n 1)"]
+ENTRYPOINT ["java", "-jar", "/home/gradle/src/build/libs/*.jar"]
