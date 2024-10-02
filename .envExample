@@ -1,9 +1,10 @@
-SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
-SPRING_DATASOURCE_USERNAME=<your-db-username>
-SPRING_DATASOURCE_PASSWORD=<your-db-password>
+SPRING_DATASOURCE_URL=jdbc:postgresql://<db-container-name>:<db-port>/<db-name>
+SPRING_DATASOURCE_USERNAME=<db-user>
+SPRING_DATASOURCE_PASSWORD=<db-password>
 
-POSTGRES_DB=<your-db-name>
-POSTGRES_USER=<your-db-username>
-POSTGRES_PASSWORD=<your-db-password>
+POSTGRES_DB=<db-name>
+POSTGRES_USER=<db-user>
+POSTGRES_PASSWORD=<db-password>
 
-PORT=<your-port>
+APP_PORT=<app-port>:<app-port>
+DB_PORT=<db-port>:<db-port>
