@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - .:/app_src
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
@@ -13,7 +15,7 @@ services:
     env_file:
       .env
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - ${APP_PORT}
 
   permission-postgres-db:
     container_name: permission-db
@@ -27,7 +29,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - ${DB_PORT}
 
 volumes:
   postgres_data:
