@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class Permission
+open class Permission
 
 fun main(args: Array<String>) {
     runApplication<Permission>(*args)

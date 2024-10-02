@@ -34,3 +34,6 @@ jobs:
 
       - name: Tests
         run: ./gradlew koverVerify
+
+      - name: Build Docker Image
+        run: docker build -t my-permission-image .

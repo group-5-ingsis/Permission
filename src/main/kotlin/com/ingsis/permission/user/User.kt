@@ -1,31 +1,23 @@
 package com.ingsis.permission.user
 
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
+@Table(name = "users")
 data class User(
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long = 0,
 
-    @Column(unique = true, nullable = false)
-    val username: String,
+    var username: String = "",
 
-    @Column(unique = true, nullable = false)
-    val email: String,
+    var email: String = "",
 
-    val password: String
-
+    var password: String = ""
 ) {
-    constructor() : this(
-        id = null,
-        username = "",
-        email = "",
-        password = ""
-    )
+    constructor(username: String, email: String, password: String) : this(0, username, email, password)
 }
