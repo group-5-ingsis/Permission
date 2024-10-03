@@ -1,5 +1,9 @@
 package com.ingsis.permission.user
 
+import com.ingsis.permission.user.dtos.UserDto
+import com.ingsis.permission.user.entities.User
+import com.ingsis.permission.user.repository.UserRepository
+import com.ingsis.permission.user.service.UserService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

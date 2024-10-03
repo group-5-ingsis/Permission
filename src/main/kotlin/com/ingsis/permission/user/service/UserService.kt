@@ -1,5 +1,8 @@
-package com.ingsis.permission.user
+package com.ingsis.permission.user.service
 
+import com.ingsis.permission.user.dtos.UserDto
+import com.ingsis.permission.user.entities.User
+import com.ingsis.permission.user.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

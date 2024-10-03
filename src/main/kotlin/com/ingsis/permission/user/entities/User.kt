@@ -1,4 +1,4 @@
-package com.ingsis.permission.user
+package com.ingsis.permission.user.entities
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

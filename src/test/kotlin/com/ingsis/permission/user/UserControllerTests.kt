@@ -1,6 +1,10 @@
 package com.ingsis.permission.user
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ingsis.permission.user.controller.UserController
+import com.ingsis.permission.user.dtos.UserDto
+import com.ingsis.permission.user.entities.User
+import com.ingsis.permission.user.service.UserService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*

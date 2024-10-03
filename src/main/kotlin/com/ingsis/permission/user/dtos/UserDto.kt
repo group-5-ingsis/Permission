@@ -1,4 +1,4 @@
-package com.ingsis.permission.user
+package com.ingsis.permission.user.dtos
 
 data class UserDto(
     val username: String,
