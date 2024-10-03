@@ -36,4 +36,4 @@ jobs:
         run: ./gradlew koverVerify
 
       - name: Build Docker Image
-        run: docker build -t my-permission-image .
+        run: docker build -t permission .
