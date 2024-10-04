@@ -9,15 +9,15 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "users")
 data class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  var id: Long = 0,
 
-    var username: String = "",
+  var username: String = "",
 
-    var email: String = "",
+  var email: String = "",
 
-    var password: String = ""
+  var password: String = ""
 ) {
-    constructor(username: String, email: String, password: String) : this(0, username, email, password)
+  constructor(username: String, email: String, password: String) : this(0, username, email, password)
 }
