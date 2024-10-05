@@ -1,4 +1,4 @@
-FROM gradle:8.10.1-jdk21 as build
+FROM openjdk:17-jdk-alpine as build
 
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
