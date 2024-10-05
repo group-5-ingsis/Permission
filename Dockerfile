@@ -1,11 +1,11 @@
-FROM eclipse-temurin:17-jdk-alpine as build
+FROM eclipse-temurin:17-jdk as build
 
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 
 RUN ./gradlew assemble --no-daemon
 
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:21-jdk
 
 RUN mkdir /app
 
