@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk as build
+FROM eclipse-temurin:17-jdk AS build
 
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
