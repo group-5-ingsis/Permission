@@ -16,7 +16,7 @@ class UserService @Autowired constructor(
     return userRepository.save(user)
   }
 
-  fun modifyUser(id: Long, userInfo: UserDto): User? {
+  fun modifyUser(id: String, userInfo: UserDto): User? {
     val userExists = userRepository.existsById(id)
     return if (userExists) {
       val existingUser = userRepository.findById(id).get()
@@ -33,7 +33,7 @@ class UserService @Autowired constructor(
     }
   }
 
-  fun deleteUser(id: Long): Boolean {
+  fun deleteUser(id: String): Boolean {
     val userExists = userRepository.existsById(id)
     return if (userExists) {
       userRepository.deleteById(id)

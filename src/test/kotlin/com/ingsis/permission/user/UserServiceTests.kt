@@ -38,7 +38,7 @@ class UserServiceTests {
 
   @Test
   fun `modifyUser should update user if exists`() {
-    val id = 1L
+    val id = "123456"
     val userDto = UserDto("updatedUser", "updated@example.com", "newPassword")
     val existingUser = User("existingUser", "existing@example.com", "oldPassword")
     val updatedUser = existingUser.copy(
@@ -61,7 +61,7 @@ class UserServiceTests {
 
   @Test
   fun `modifyUser should return null if user does not exist`() {
-    val id = 1L
+    val id = "1234567"
     val userDto = UserDto("testUser", "test@example.com", "password")
 
     `when`(userRepository.existsById(id)).thenReturn(false)
@@ -73,7 +73,7 @@ class UserServiceTests {
 
   @Test
   fun `deleteUser should return true if user exists and is deleted`() {
-    val id = 1L
+    val id = "123456"
 
     `when`(userRepository.existsById(id)).thenReturn(true)
 
@@ -84,7 +84,7 @@ class UserServiceTests {
 
   @Test
   fun `deleteUser should return false if user does not exist`() {
-    val id = 1L
+    val id = "1234567"
 
     `when`(userRepository.existsById(id)).thenReturn(false)
 
