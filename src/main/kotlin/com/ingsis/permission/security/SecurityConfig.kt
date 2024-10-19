@@ -15,18 +15,15 @@ import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.io.IOException
 
-
 @Configuration
 @EnableWebSecurity
 open class SecurityConfig() {
-
 
   @Value("\${okta.oauth2.issuer}") // El issuer es la url base del proveedor de autenticacion
   private val issuer: String? = null
 
   @Value("\${okta.oauth2.client-id}") // El client-id es el identificador único de tu aplicación en Auth0
   private val clientId: String? = null
-
 
   @Bean
   @Throws(Exception::class)
@@ -44,9 +41,8 @@ open class SecurityConfig() {
     return http.build()
   }
 
-
   private fun logoutHandler(): LogoutHandler {
-   // Hagan logout no solo de la sesión local de la aplicación, sino también de Auth0, redirigiéndolos de nuevo a tu aplicación después de cerrar la sesión.
+    // Hagan logout no solo de la sesión local de la aplicación, sino también de Auth0, redirigiéndolos de nuevo a tu aplicación después de cerrar la sesión.
     return LogoutHandler { _: HttpServletRequest?, response: HttpServletResponse, _: Authentication? ->
       try {
         val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
