@@ -2,7 +2,9 @@ name: CD
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches:
+      - "main"
+      - "dev"
 
 permissions:
   contents: read
@@ -10,4 +12,7 @@ permissions:
 
 jobs:
   cd:
-    uses: husseymarcos/ingsis-workflows/.github/workflows/cd-containers.yml@main
+    uses: group-5-ingsis/workflows/.github/workflows/cd-containers.yml@main
+    with:
+      image: 'permission'
+      environment: ${{ github.ref_name }}
