@@ -68,8 +68,6 @@ open class SecurityConfig(@Value("\${auth0.audience}")
 
 
 
-
-
   @Bean
   open fun webSecurityCustomizer(): WebSecurityCustomizer {
     return WebSecurityCustomizer { web: WebSecurity -> web.debug(webSecurityDebug) }
