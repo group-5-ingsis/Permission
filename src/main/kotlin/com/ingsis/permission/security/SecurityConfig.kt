@@ -3,15 +3,21 @@ package com.ingsis.permission.security
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpMethod.POST
 import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtValidators
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 
 
@@ -19,7 +25,8 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableWebSecurity
 open class SecurityConfig(@Value("\${auth0.audience}")
                           val audience: String)  {
-
+  @Value("\${spring.websecurity.debug:false}")
+  var webSecurityDebug: Boolean = false
 
   @Value("\${okta.oauth2.issuer}") // El issuer es la url base del proveedor de autenticacion
   private val issuer: String? = null
@@ -29,17 +36,23 @@ open class SecurityConfig(@Value("\${auth0.audience}")
   @Throws(Exception::class)
   open fun configure(http: HttpSecurity): SecurityFilterChain? {
     http
-      .authorizeHttpRequests { authorize ->
-        authorize
+      .authorizeHttpRequests { authorize -> authorize
 
-          .anyRequest().authenticated()
+        .requestMatchers("/").permitAll()
+        .requestMatchers(GET, "/snippets").permitAll()
+        .requestMatchers(GET, "/snippets/*").permitAll()
+        .requestMatchers(POST, "/snippets").hasAuthority("user")
+
       }
       .csrf {
         it.disable()
       }
       .cors(withDefaults())
       .oauth2ResourceServer { oauth2 ->
-        oauth2.jwt(withDefaults())
+        oauth2.jwt { jwt ->
+          jwt.decoder(jwtDecoder())
+          jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter())
+        }
       }
     return http.build()
   }
@@ -52,6 +65,25 @@ open class SecurityConfig(@Value("\${auth0.audience}")
     val withAudience: OAuth2TokenValidator<Jwt> = DelegatingOAuth2TokenValidator(withIssuer, audienceValidator)
     jwtDecoder.setJwtValidator(withAudience)
     return jwtDecoder
+  }
+
+
+
+  @Bean
+  open fun customJwtAuthenticationConverter(): JwtAuthenticationConverter {
+    val converter = JwtGrantedAuthoritiesConverter()
+    converter.setAuthoritiesClaimName("https://example_yt/roles") // Busca los roles aca
+    converter.setAuthorityPrefix("")
+
+    val jwtConverter = JwtAuthenticationConverter()
+    jwtConverter.setJwtGrantedAuthoritiesConverter(converter)
+    return jwtConverter
+  }
+
+
+  @Bean
+  open fun webSecurityCustomizer(): WebSecurityCustomizer {
+    return WebSecurityCustomizer { web: WebSecurity -> web.debug(webSecurityDebug) }
   }
 
 }
