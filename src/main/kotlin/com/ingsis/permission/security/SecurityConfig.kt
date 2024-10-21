@@ -41,7 +41,7 @@ open class SecurityConfig(@Value("\${auth0.audience}")
         .requestMatchers("/").permitAll()
         .requestMatchers(GET, "/snippets").permitAll()
         .requestMatchers(GET, "/snippets/*").permitAll()
-        .requestMatchers(POST, "/snippets").hasAuthority("user")
+        .anyRequest().authenticated()
 
       }
       .csrf {
@@ -51,7 +51,6 @@ open class SecurityConfig(@Value("\${auth0.audience}")
       .oauth2ResourceServer { oauth2 ->
         oauth2.jwt { jwt ->
           jwt.decoder(jwtDecoder())
-          jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter())
         }
       }
     return http.build()
@@ -69,16 +68,6 @@ open class SecurityConfig(@Value("\${auth0.audience}")
 
 
 
-  @Bean
-  open fun customJwtAuthenticationConverter(): JwtAuthenticationConverter {
-    val converter = JwtGrantedAuthoritiesConverter()
-    converter.setAuthoritiesClaimName("https://example_yt/roles") // Busca los roles aca
-    converter.setAuthorityPrefix("")
-
-    val jwtConverter = JwtAuthenticationConverter()
-    jwtConverter.setJwtGrantedAuthoritiesConverter(converter)
-    return jwtConverter
-  }
 
 
   @Bean
