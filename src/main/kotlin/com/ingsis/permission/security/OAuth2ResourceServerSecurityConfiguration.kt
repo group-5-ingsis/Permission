@@ -3,12 +3,9 @@ package com.ingsis.permission.security
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod.GET
 import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.Jwt
@@ -19,35 +16,29 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-open class SecurityConfig(
+open class OAuth2ResourceServerSecurityConfiguration(
   @Value("\${auth0.audience}")
-  val audience: String
+  val audience: String,
+  @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+  val issuer: String
 ) {
-  @Value("\${spring.websecurity.debug:false}")
-  var webSecurityDebug: Boolean = false
-
-  @Value("\${okta.oauth2.issuer}") // El issuer es la url base del proveedor de autenticacion
-  private val issuer: String? = null
 
   @Bean
-  @Throws(Exception::class)
-  open fun configure(http: HttpSecurity): SecurityFilterChain? {
-    http
-      .authorizeHttpRequests { authorize ->
-        authorize
-          .requestMatchers("/").permitAll()
-          .requestMatchers(GET, "/snippets").permitAll()
-          .requestMatchers(GET, "/snippets/*").permitAll()
-          .anyRequest().authenticated()
+  open fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    http.authorizeHttpRequests {
+      it
+        .requestMatchers("/").permitAll()
+//        .requestMatchers(GET, "/snippets").hasAuthority("SCOPE_read:snippets")
+//        .requestMatchers(GET, "/snippets/*").hasAuthority("SCOPE_read:snippets")
+//        .requestMatchers(POST, "/snippets").hasAuthority("SCOPE_write:snippets")
+        .anyRequest().authenticated()
+    }
+      .oauth2ResourceServer { it.jwt(withDefaults()) }
+      .cors {
+        it.disable()
       }
       .csrf {
         it.disable()
-      }
-      .cors(withDefaults())
-      .oauth2ResourceServer { oauth2 ->
-        oauth2.jwt { jwt ->
-          jwt.decoder(jwtDecoder())
-        }
       }
     return http.build()
   }
@@ -60,10 +51,5 @@ open class SecurityConfig(
     val withAudience: OAuth2TokenValidator<Jwt> = DelegatingOAuth2TokenValidator(withIssuer, audienceValidator)
     jwtDecoder.setJwtValidator(withAudience)
     return jwtDecoder
-  }
-
-  @Bean
-  open fun webSecurityCustomizer(): WebSecurityCustomizer {
-    return WebSecurityCustomizer { web: WebSecurity -> web.debug(webSecurityDebug) }
   }
 }
