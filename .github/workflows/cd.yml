@@ -2,9 +2,7 @@ name: CD
 
 on:
   push:
-    branches:
-      - "main"
-      - "dev"
+    branches: [ "main", "dev" ]
 
 permissions:
   contents: read
@@ -13,6 +11,7 @@ permissions:
 jobs:
   cd:
     uses: group-5-ingsis/workflows/.github/workflows/cd-containers.yml@main
-    with:
-      image: 'permission'
-      environment: ${{ github.ref_name }}
+    secrets:
+      AZURE_KEY: ${{ github.ref == 'refs/heads/main' && secrets.AZURE_MAIN_KEY || secrets.AZURE_DEV_KEY }}
+      AZURE_USER: ${{ github.ref == 'refs/heads/main' && secrets.AZURE_MAIN_USER || secrets.AZURE_DEV_USER }}
+      AZURE_HOST: ${{ github.ref == 'refs/heads/main' && secrets.AZURE_MAIN_HOST || secrets.AZURE_DEV_HOST }}
