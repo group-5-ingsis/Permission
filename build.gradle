@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+    implementation 'org.json:json:20210307'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
