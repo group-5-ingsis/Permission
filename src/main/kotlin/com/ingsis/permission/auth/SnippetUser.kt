@@ -5,9 +5,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 
 @Entity
-data class User(
+data class SnippetUser(
   @Id
   var auth0id: String,
+
+  var username: String,
 
   @ElementCollection
   var readableSnippets: List<String>,
@@ -17,6 +19,7 @@ data class User(
 ) {
   constructor() : this(
     auth0id = "",
+    username = "",
     readableSnippets = emptyList(),
     writableSnippets = emptyList()
   )
