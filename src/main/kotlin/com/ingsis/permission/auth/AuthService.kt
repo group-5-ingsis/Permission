@@ -15,10 +15,12 @@ class AuthService(
 ) {
 
   fun getUserIdFromToken(accessToken: String): String {
-    val url = "https://$authDomain/userinfo"
+    val url = "${authDomain}userinfo"
+
     val headers = HttpHeaders().apply {
       setBearerAuth(accessToken)
     }
+
     val entity = HttpEntity<Any>(headers)
 
     val response = restTemplate.exchange(url, HttpMethod.GET, entity, String::class.java)
