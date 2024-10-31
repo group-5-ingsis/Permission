@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 interface UserRoutesSpec {
 
   @GetMapping("/id")
-  fun getUserId(@RequestHeader accessToken: String): String?
+  fun getUserId(@RequestHeader("Authorization") accessToken: String): String
 
   @PostMapping("/")
   fun registerUser(@RequestBody snippetUser: SnippetUser, @RequestParam accessToken: String): SnippetUser
