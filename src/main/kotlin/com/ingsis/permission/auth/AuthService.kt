@@ -14,11 +14,11 @@ class AuthService(
   @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}") private val authDomain: String
 ) {
 
-  fun getUserIdFromToken(accessToken: String): String {
+  fun getUserId(token: String): String {
     val url = "${authDomain}userinfo"
 
     val headers = HttpHeaders().apply {
-      setBearerAuth(accessToken)
+      set(HttpHeaders.AUTHORIZATION, token)
     }
 
     val entity = HttpEntity<Any>(headers)
