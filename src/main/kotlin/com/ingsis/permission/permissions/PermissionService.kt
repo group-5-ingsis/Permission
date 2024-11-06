@@ -3,10 +3,20 @@ package com.ingsis.permission.permissions
 import com.ingsis.permission.user.SnippetUser
 import com.ingsis.permission.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
 
 @Service
-class PermissionService(@Autowired private val userRepository: UserRepository) {
+class PermissionService(
+  @Autowired private val userRepository: UserRepository
+) {
+
+  private val claimsKey = System.getProperty("CLAIMS_KEY")
+
+  fun getAuth0Email(jwt: Jwt): String {
+    val emailClaim = jwt.claims["$claimsKey/email"]
+    return emailClaim?.toString() ?: "unknown"
+  }
 
   fun getSnippets(userId: String, type: String): List<String> {
     val user = checkUserExists(userId)
@@ -22,18 +32,13 @@ class PermissionService(@Autowired private val userRepository: UserRepository) {
     if (user == null) {
       val newUser = SnippetUser(
         auth0id = userId,
-        username = getAuth0Username(),
+        name = "getAuth0Username()",
         readableSnippets = emptyList(),
         writableSnippets = emptyList()
       )
       return userRepository.save(newUser)
     }
     return user
-  }
-
-  // Agarrar el username con /tokenInfo de auth0
-  private fun getAuth0Username(): String {
-    return "hello"
   }
 
   fun updatePermission(userId: String, snippetId: String, type: String): SnippetUser {

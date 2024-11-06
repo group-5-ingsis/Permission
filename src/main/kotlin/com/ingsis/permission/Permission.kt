@@ -18,6 +18,7 @@ fun main(args: Array<String>) {
   System.setProperty("SPRING_DATASOURCE_URL", dotenv["SPRING_LOCAL_DATASOURCE_URL"])
   System.setProperty("SPRING_DATASOURCE_USERNAME", dotenv["SPRING_DATASOURCE_USERNAME"])
   System.setProperty("SPRING_DATASOURCE_PASSWORD", dotenv["SPRING_DATASOURCE_PASSWORD"])
+  System.setProperty("CLAIMS_KEY", dotenv["CLAIMS_KEY"])
 
   runApplication<Permission>(*args)
 }

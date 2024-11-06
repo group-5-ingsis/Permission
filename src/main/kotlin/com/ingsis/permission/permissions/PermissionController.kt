@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class PermissionController(@Autowired private val permissionService: PermissionService) {
 
-  @GetMapping("/jwt/id")
-  fun getUserId(@AuthenticationPrincipal jwt: Jwt): String {
-    return jwt.subject
-  }
-
   @GetMapping("/write")
   fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
     val userId = jwt.subject
     return permissionService.getSnippets(userId, "Write")
+  }
+
+  @GetMapping("/username")
+  fun getUsername(@AuthenticationPrincipal jwt: Jwt): String {
+    return permissionService.getAuth0Email(jwt)
   }
 
   @PostMapping("/write/update/{snippetId}")
