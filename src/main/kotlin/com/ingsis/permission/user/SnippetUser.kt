@@ -1,4 +1,4 @@
-package com.ingsis.permission.auth
+package com.ingsis.permission.user
 
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
@@ -9,7 +9,7 @@ data class SnippetUser(
   @Id
   var auth0id: String,
 
-  var username: String,
+  var email: String,
 
   @ElementCollection
   var readableSnippets: List<String>,
@@ -19,7 +19,7 @@ data class SnippetUser(
 ) {
   constructor() : this(
     auth0id = "",
-    username = "",
+    email = "",
     readableSnippets = emptyList(),
     writableSnippets = emptyList()
   )
