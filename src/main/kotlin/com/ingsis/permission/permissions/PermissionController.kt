@@ -19,27 +19,27 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return jwt.subject
   }
 
-  @GetMapping("/read")
-  fun getReadableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
-    val userId = jwt.subject
-    return permissionService.getSnippets(userId, "Read")
-  }
-
   @GetMapping("/write")
   fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
     val userId = jwt.subject
     return permissionService.getSnippets(userId, "Write")
   }
 
-  @PostMapping("/update/read/{snippetId}")
-  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
-    val userId = jwt.subject
-    return permissionService.updatePermission(userId, snippetId, "Read")
-  }
-
-  @PostMapping("/update/write/{snippetId}")
+  @PostMapping("/write/update/{snippetId}")
   fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
     val userId = jwt.subject
     return permissionService.updatePermission(userId, snippetId, "Write")
+  }
+
+  @GetMapping("/read")
+  fun getReadableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
+    val userId = jwt.subject
+    return permissionService.getSnippets(userId, "Read")
+  }
+
+  @PostMapping("/read/update/{snippetId}")
+  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
+    val userId = jwt.subject
+    return permissionService.updatePermission(userId, snippetId, "Read")
   }
 }
