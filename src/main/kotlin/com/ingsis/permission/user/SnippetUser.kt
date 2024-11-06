@@ -9,7 +9,7 @@ data class SnippetUser(
   @Id
   var auth0id: String,
 
-  var name: String,
+  var email: String,
 
   @ElementCollection
   var readableSnippets: List<String>,
@@ -19,7 +19,7 @@ data class SnippetUser(
 ) {
   constructor() : this(
     auth0id = "",
-    name = "",
+    email = "",
     readableSnippets = emptyList(),
     writableSnippets = emptyList()
   )
