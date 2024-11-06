@@ -1,4 +1,4 @@
-package com.ingsis.permission.auth
+package com.ingsis.permission.user
 
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
