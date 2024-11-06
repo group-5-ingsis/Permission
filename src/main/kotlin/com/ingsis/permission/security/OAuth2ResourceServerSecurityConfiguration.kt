@@ -27,7 +27,7 @@ open class OAuth2ResourceServerSecurityConfiguration(
   open fun filterChain(http: HttpSecurity): SecurityFilterChain {
     http.authorizeHttpRequests {
       it
-        .anyRequest().authenticated()
+        .anyRequest().permitAll()
     }
       .oauth2ResourceServer { it.jwt(withDefaults()) }
     return http.build()

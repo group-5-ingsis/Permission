@@ -1,17 +1,17 @@
 package com.ingsis.permission.auth
 
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/v1/user")
 @RestController
-class UserRoutes(@Autowired val authService: AuthService) {
+class UserRoutes {
 
   @GetMapping("/id")
-  fun getUserId(@RequestHeader("Authorization") token: String): String {
-    return authService.getUserId(token)
+  fun getUserId(@AuthenticationPrincipal jwt: Jwt): String {
+    return jwt.subject
   }
 }
