@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
   System.setProperty("AUTH_CLIENT_SECRET", dotenv["AUTH_CLIENT_SECRET"])
   System.setProperty("AUTH0_AUDIENCE", dotenv["AUTH0_AUDIENCE"])
   System.setProperty("SERVER_PORT", dotenv["SERVER_PORT"])
-  System.setProperty("SPRING_DATASOURCE_URL", "jdbc:postgresql://localhost:5432/permission")
+  System.setProperty("SPRING_DATASOURCE_URL", dotenv["SPRING_LOCAL_DATASOURCE_URL"])
   System.setProperty("SPRING_DATASOURCE_USERNAME", dotenv["SPRING_DATASOURCE_USERNAME"])
   System.setProperty("SPRING_DATASOURCE_PASSWORD", dotenv["SPRING_DATASOURCE_PASSWORD"])
 
