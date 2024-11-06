@@ -21,4 +21,10 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     val userId = jwt.subject
     return permissionService.getReadableSnippets(userId)
   }
+
+  @GetMapping("/write")
+  fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
+    val userId = jwt.subject
+    return permissionService.getWritableSnippets(userId)
+  }
 }
