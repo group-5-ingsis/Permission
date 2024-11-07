@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: ${SPRING_LOCAL_DATASOURCE_URL}
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+auth0:
+  audience: ${AUTH0_AUDIENCE}
+server:
+  port: ${SERVER_PORT}
