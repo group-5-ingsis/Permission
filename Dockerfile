@@ -13,4 +13,4 @@ RUN mkdir /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/permission.jar
 
-ENTRYPOINT ["java", "-jar", "/app/permission.jar"]
+ENTRYPOINT ["java", "-javaagent:/app/newrelic/newrelic.jar", "-jar", "/app/permission.jar"]
