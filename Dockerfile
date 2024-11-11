@@ -9,13 +9,9 @@ RUN --mount=type=secret,id=USERNAME,required,env=USERNAME \
 
 FROM amazoncorretto:21-alpine
 
-RUN apk add --no-cache unzip && mkdir /app
+RUN mkdir /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/permission.jar
-
-RUN mkdir /app/newrelic && \
-    curl -o /app/newrelic/newrelic-java.zip https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip && \
-    unzip /app/newrelic/newrelic-java.zip -d /app/newrelic && \
-    rm /app/newrelic/newrelic-java.zip
+COPY newrelic /app/newrelic
 
 ENTRYPOINT ["java", "-javaagent:/app/newrelic/newrelic.jar", "-jar", "/app/permission.jar"]
