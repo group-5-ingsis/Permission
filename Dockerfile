@@ -11,11 +11,7 @@ FROM amazoncorretto:21-alpine
 
 RUN mkdir /app
 
-# Copy the built JAR file
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/permission.jar
+COPY newrelic /app/newrelic
 
-# Copy the New Relic agent files
-COPY --from=build /home/gradle/src/newrelic /app/newrelic
-
-# Set the entrypoint with the correct path to newrelic.jar
 ENTRYPOINT ["java", "-javaagent:/app/newrelic/newrelic.jar", "-jar", "/app/permission.jar"]
