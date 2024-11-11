@@ -9,7 +9,7 @@ RUN --mount=type=secret,id=USERNAME,required,env=USERNAME \
 
 FROM amazoncorretto:21-alpine
 
-RUN mkdir /app
+RUN apk add --no-cache unzip && mkdir /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/permission.jar
 
