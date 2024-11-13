@@ -1,7 +1,9 @@
 package com.ingsis.permission.permissions
 
 import com.ingsis.permission.user.SnippetUser
+import com.ingsis.permission.user.UserDto
 import com.ingsis.permission.user.UserRepository
+import com.ingsis.permission.user.toUserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -27,14 +29,19 @@ class PermissionService(
   private fun createUser(userId: String, email: String): SnippetUser {
     val newUser = SnippetUser(
       auth0id = userId,
-      email = email,
+      username = email,
       readableSnippets = emptyList(),
       writableSnippets = emptyList()
     )
     return userRepository.save(newUser)
   }
 
-  fun updatePermission(userId: String, email: String, snippetId: String, type: String): SnippetUser {
+  fun getUsers(): List<UserDto> {
+    val users = userRepository.findAll()
+    return users.map { it.toUserDto() }
+  }
+
+  fun updatePermission(userId: String, email: String, snippetId: String, type: String) {
     val user = getOrCreateUser(userId, email)
 
     when (type) {
@@ -43,7 +50,7 @@ class PermissionService(
       else -> throw IllegalArgumentException("Unknown permission type")
     }
 
-    return userRepository.save(user)
+    userRepository.save(user)
   }
 
   private fun updatePermissions(snippetList: List<String>, snippetId: String): List<String> {
