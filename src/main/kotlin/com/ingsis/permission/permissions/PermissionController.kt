@@ -1,23 +1,20 @@
 package com.ingsis.permission.permissions
 
+import com.ingsis.permission.user.UserData
 import com.ingsis.permission.user.UserDto
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class PermissionController(@Autowired private val permissionService: PermissionService) {
 
-  private val claimsKey = System.getProperty("CLAIMS_KEY")
-
   @GetMapping("/write")
-  fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
-    val (userId, username) = extractUserInfo(jwt)
-    return permissionService.getSnippets(userId, username, "Write")
+  fun getWritableSnippets(@RequestBody userData: UserData): List<String> {
+    return permissionService.getSnippets(userData.userId, userData.username, "Write")
   }
 
   @GetMapping("/users")
@@ -26,40 +23,25 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   }
 
   @GetMapping("/")
-  fun getWritableAndReadableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
-    val (userId, username) = extractUserInfo(jwt)
-    val readable = permissionService.getSnippets(userId, username, "Read")
-    val writable = permissionService.getSnippets(userId, username, "Write")
+  fun getWritableAndReadableSnippets(@RequestBody userData: UserData): List<String> {
+    val readable = permissionService.getSnippets(userData.userId, userData.username, "Read")
+    val writable = permissionService.getSnippets(userData.userId, userData.username, "Write")
     return readable + writable
   }
 
-  @GetMapping("/username")
-  fun getUsername(@AuthenticationPrincipal jwt: Jwt): String {
-    val (_, username) = extractUserInfo(jwt)
-    return username
+  @GetMapping("/read")
+  fun getReadableSnippets(@RequestBody userData: UserData): List<String> {
+    return permissionService.getSnippets(userData.userId, userData.username, "Read")
+  }
+
+  // Revisar estos 2 methods
+  @PostMapping("/read/{userId}/{snippetId}")
+  fun updateReadPermissions(@RequestBody userData: UserData, @PathVariable snippetId: String, @PathVariable userId: String) {
+    return permissionService.updatePermission(userId, userData.username, snippetId, "Read")
   }
 
   @PostMapping("/write/{userId}/{snippetId}")
-  fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String) {
-    val (_, username) = extractUserInfo(jwt)
-    return permissionService.updatePermission(userId, username, snippetId, "Write")
-  }
-
-  @GetMapping("/read")
-  fun getReadableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
-    val (userId, username) = extractUserInfo(jwt)
-    return permissionService.getSnippets(userId, username, "Read")
-  }
-
-  @PostMapping("/read/{userId}/{snippetId}")
-  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String) {
-    val (_, username) = extractUserInfo(jwt)
-    return permissionService.updatePermission(userId, username, snippetId, "Read")
-  }
-
-  private fun extractUserInfo(jwt: Jwt): Pair<String, String> {
-    val userId = jwt.subject
-    val username = jwt.claims["$claimsKey/username"]?.toString() ?: "unknown"
-    return Pair(userId, username)
+  fun updateWritePermissions(@RequestBody userData: UserData, @PathVariable snippetId: String, @PathVariable userId: String) {
+    return permissionService.updatePermission(userData.userId, userData.username, snippetId, "Write")
   }
 }

@@ -3,7 +3,6 @@ package com.ingsis.permission.security
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod.GET
 import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -31,8 +30,7 @@ open class OAuth2ResourceServerSecurityConfiguration(
   open fun filterChain(http: HttpSecurity): SecurityFilterChain {
     http.authorizeHttpRequests {
       it
-        .requestMatchers(GET, "/").authenticated()
-        .requestMatchers(GET, "/users").authenticated()
+        .anyRequest().authenticated()
     }
       .oauth2ResourceServer { it.jwt(withDefaults()) }
     return http.build()
