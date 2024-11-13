@@ -1,7 +1,9 @@
 package com.ingsis.permission.permissions
 
 import com.ingsis.permission.user.SnippetUser
+import com.ingsis.permission.user.UserDto
 import com.ingsis.permission.user.UserRepository
+import com.ingsis.permission.user.toUserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -32,6 +34,11 @@ class PermissionService(
       writableSnippets = emptyList()
     )
     return userRepository.save(newUser)
+  }
+
+  fun getUsers(): List<UserDto> {
+    val users = userRepository.findAll()
+    return users.map { it.toUserDto() }
   }
 
   fun updatePermission(userId: String, email: String, snippetId: String, type: String): SnippetUser {

@@ -24,3 +24,10 @@ data class SnippetUser(
     writableSnippets = emptyList()
   )
 }
+
+fun SnippetUser.toUserDto(): UserDto {
+  return UserDto(
+    id = this.auth0id,
+    name = this.username
+  )
+}

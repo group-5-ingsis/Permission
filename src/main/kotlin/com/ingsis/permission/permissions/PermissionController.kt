@@ -1,16 +1,15 @@
 package com.ingsis.permission.permissions
 
 import com.ingsis.permission.user.SnippetUser
+import com.ingsis.permission.user.UserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/v1/permission")
 @RestController
 class PermissionController(@Autowired private val permissionService: PermissionService) {
 
@@ -20,6 +19,19 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
     val (userId, username) = extractUserInfo(jwt)
     return permissionService.getSnippets(userId, username, "Write")
+  }
+
+  @GetMapping("/users")
+  fun getUsers(): List<UserDto> {
+    return permissionService.getUsers()
+  }
+
+  @GetMapping("/")
+  fun getWritableAndReadableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
+    val (userId, username) = extractUserInfo(jwt)
+    val readable = permissionService.getSnippets(userId, username, "Read")
+    val writable = permissionService.getSnippets(userId, username, "Write")
+    return readable + writable
   }
 
   @GetMapping("/username")
