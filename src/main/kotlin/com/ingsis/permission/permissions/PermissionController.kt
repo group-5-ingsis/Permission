@@ -1,6 +1,5 @@
 package com.ingsis.permission.permissions
 
-import com.ingsis.permission.user.SnippetUser
 import com.ingsis.permission.user.UserDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -41,7 +40,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   }
 
   @PostMapping("/write/{userId}/{snippetId}")
-  fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String): SnippetUser {
+  fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String) {
     val (_, username) = extractUserInfo(jwt)
     return permissionService.updatePermission(userId, username, snippetId, "Write")
   }
@@ -53,7 +52,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   }
 
   @PostMapping("/read/{userId}/{snippetId}")
-  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String): SnippetUser {
+  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String) {
     val (_, username) = extractUserInfo(jwt)
     return permissionService.updatePermission(userId, username, snippetId, "Read")
   }

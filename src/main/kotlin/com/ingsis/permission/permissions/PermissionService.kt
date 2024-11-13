@@ -41,7 +41,7 @@ class PermissionService(
     return users.map { it.toUserDto() }
   }
 
-  fun updatePermission(userId: String, email: String, snippetId: String, type: String): SnippetUser {
+  fun updatePermission(userId: String, email: String, snippetId: String, type: String) {
     val user = getOrCreateUser(userId, email)
 
     when (type) {
@@ -50,7 +50,7 @@ class PermissionService(
       else -> throw IllegalArgumentException("Unknown permission type")
     }
 
-    return userRepository.save(user)
+    userRepository.save(user)
   }
 
   private fun updatePermissions(snippetList: List<String>, snippetId: String): List<String> {
