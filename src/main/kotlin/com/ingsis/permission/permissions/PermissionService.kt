@@ -27,7 +27,7 @@ class PermissionService(
   private fun createUser(userId: String, email: String): SnippetUser {
     val newUser = SnippetUser(
       auth0id = userId,
-      email = email,
+      username = email,
       readableSnippets = emptyList(),
       writableSnippets = emptyList()
     )

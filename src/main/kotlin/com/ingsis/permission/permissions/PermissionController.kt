@@ -18,37 +18,37 @@ class PermissionController(@Autowired private val permissionService: PermissionS
 
   @GetMapping("/write")
   fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
-    val (userId, email) = extractUserInfo(jwt)
-    return permissionService.getSnippets(userId, email, "Write")
+    val (userId, username) = extractUserInfo(jwt)
+    return permissionService.getSnippets(userId, username, "Write")
   }
 
-  @GetMapping("/email")
-  fun getEmail(@AuthenticationPrincipal jwt: Jwt): String {
-    val (_, email) = extractUserInfo(jwt)
-    return email
+  @GetMapping("/username")
+  fun getUsername(@AuthenticationPrincipal jwt: Jwt): String {
+    val (_, username) = extractUserInfo(jwt)
+    return username
   }
 
   @PostMapping("/write/update/{snippetId}")
   fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
-    val (userId, email) = extractUserInfo(jwt)
-    return permissionService.updatePermission(userId, email, snippetId, "Write")
+    val (userId, username) = extractUserInfo(jwt)
+    return permissionService.updatePermission(userId, username, snippetId, "Write")
   }
 
   @GetMapping("/read")
   fun getReadableSnippets(@AuthenticationPrincipal jwt: Jwt): List<String> {
-    val (userId, email) = extractUserInfo(jwt)
-    return permissionService.getSnippets(userId, email, "Read")
+    val (userId, username) = extractUserInfo(jwt)
+    return permissionService.getSnippets(userId, username, "Read")
   }
 
   @PostMapping("/read/update/{snippetId}")
   fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
-    val (userId, email) = extractUserInfo(jwt)
-    return permissionService.updatePermission(userId, email, snippetId, "Read")
+    val (userId, username) = extractUserInfo(jwt)
+    return permissionService.updatePermission(userId, username, snippetId, "Read")
   }
 
   private fun extractUserInfo(jwt: Jwt): Pair<String, String> {
     val userId = jwt.subject
-    val email = jwt.claims["$claimsKey/email"]?.toString() ?: "unknown"
-    return Pair(userId, email)
+    val username = jwt.claims["$claimsKey/username"]?.toString() ?: "unknown"
+    return Pair(userId, username)
   }
 }
