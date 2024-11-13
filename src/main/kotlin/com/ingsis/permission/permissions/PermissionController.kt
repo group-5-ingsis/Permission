@@ -40,9 +40,9 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return username
   }
 
-  @PostMapping("/write/update/{snippetId}")
-  fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
-    val (userId, username) = extractUserInfo(jwt)
+  @PostMapping("/write/update/{userId}/{snippetId}")
+  fun updateWritePermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String): SnippetUser {
+    val (_, username) = extractUserInfo(jwt)
     return permissionService.updatePermission(userId, username, snippetId, "Write")
   }
 
@@ -52,9 +52,9 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return permissionService.getSnippets(userId, username, "Read")
   }
 
-  @PostMapping("/read/update/{snippetId}")
-  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String): SnippetUser {
-    val (userId, username) = extractUserInfo(jwt)
+  @PostMapping("/read/update/{userId}/{snippetId}")
+  fun updateReadPermissions(@AuthenticationPrincipal jwt: Jwt, @PathVariable snippetId: String, @PathVariable userId: String): SnippetUser {
+    val (_, username) = extractUserInfo(jwt)
     return permissionService.updatePermission(userId, username, snippetId, "Read")
   }
 
