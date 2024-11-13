@@ -14,6 +14,9 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtValidators
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -43,5 +46,18 @@ open class OAuth2ResourceServerSecurityConfiguration(
     val withAudience: OAuth2TokenValidator<Jwt> = DelegatingOAuth2TokenValidator(withIssuer, audienceValidator)
     jwtDecoder.setJwtValidator(withAudience)
     return jwtDecoder
+  }
+
+  @Bean
+  open fun corsConfigurationSource(): CorsConfigurationSource {
+    val corsConfig = CorsConfiguration()
+    corsConfig.allowedOrigins = listOf("http://localhost:5173", "https://snippetsearcher-group5.duckdns.org")
+    corsConfig.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+    corsConfig.allowedHeaders = listOf("Authorization", "Content-Type")
+    corsConfig.allowCredentials = true
+
+    val source = UrlBasedCorsConfigurationSource()
+    source.registerCorsConfiguration("/**", corsConfig)
+    return source
   }
 }
