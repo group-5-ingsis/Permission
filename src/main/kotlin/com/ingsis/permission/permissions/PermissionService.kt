@@ -46,13 +46,7 @@ class PermissionService(
     return users.mapNotNull {
       logger.info("User Name: ${it.username}")
 
-      if (it.username == null) {
-        logger.info("Deleting user with null username from the database. User ID: ${it.auth0id}")
-        userRepository.delete(it)
-        null  // Return null to exclude this user from the result list
-      } else {
-        it.toUserDto()  // Convert to UserDto if username is not null
-      }
+      it.toUserDto()
     }
   }
 
