@@ -2,11 +2,11 @@ package com.ingsis.permission.permissions
 
 import com.ingsis.permission.user.UserData
 import com.ingsis.permission.user.UserDto
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import jakarta.servlet.http.HttpServletRequest
 
 @RestController
 class PermissionController(@Autowired private val permissionService: PermissionService) {

@@ -1,10 +1,10 @@
 package com.ingsis.permission.logging
 
+import org.slf4j.MDC
 import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.stereotype.Component
-import org.slf4j.MDC
 import java.util.UUID
 
 @Component

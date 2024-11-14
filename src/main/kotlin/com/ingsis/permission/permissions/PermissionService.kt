@@ -15,8 +15,8 @@ class PermissionService(
 
   private val logger = LoggerFactory.getLogger(PermissionController::class.java)
 
-  fun getSnippets(userId: String, email: String, type: String): List<String> {
-    val user = getOrCreateUser(userId, email)
+  fun getSnippets(userId: String, username: String, type: String): List<String> {
+    val user = getOrCreateUser(userId, username)
     return when (type) {
       "Read" -> user.readableSnippets
       "Write" -> user.writableSnippets
@@ -24,8 +24,8 @@ class PermissionService(
     }
   }
 
-  private fun getOrCreateUser(userId: String, email: String): SnippetUser {
-    val user = userRepository.findByAuth0id(userId) ?: createUser(userId, email)
+  private fun getOrCreateUser(userId: String, username: String): SnippetUser {
+    val user = userRepository.findByAuth0id(userId) ?: createUser(userId, username)
     return user
   }
 
@@ -50,8 +50,8 @@ class PermissionService(
     }
   }
 
-  fun updatePermission(userId: String, email: String, snippetId: String, type: String) {
-    val user = getOrCreateUser(userId, email)
+  fun updatePermission(userId: String, username: String, snippetId: String, type: String) {
+    val user = getOrCreateUser(userId, username)
 
     when (type) {
       "Read" -> user.readableSnippets = updatePermissions(user.readableSnippets, snippetId)
