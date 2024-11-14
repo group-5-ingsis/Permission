@@ -26,3 +26,9 @@ spring:
 
 server:
   port: ${SERVER_PORT}
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: INFO
+    com.ingsis.permission: INFO
