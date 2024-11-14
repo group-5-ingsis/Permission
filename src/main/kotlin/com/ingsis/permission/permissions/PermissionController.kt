@@ -13,17 +13,18 @@ class PermissionController(@Autowired private val permissionService: PermissionS
 
   companion object {
     const val CORRELATION_ID_HEADER = "X-Correlation-ID"
+    const val NO_CORRELATION_ID = "No-Correlation-ID" // Tag to indicate no correlation ID was received
   }
 
   private val logger = LoggerFactory.getLogger(PermissionController::class.java)
 
   private fun setCorrelationIdFromHeader(request: HttpServletRequest) {
-    val correlationId = request.getHeader(CORRELATION_ID_HEADER)
-    if (correlationId != null) {
-      MDC.put(CORRELATION_ID_HEADER, correlationId)
-      logger.info("Correlation ID set to MDC: $correlationId")
+    val correlationId = request.getHeader(CORRELATION_ID_HEADER) ?: NO_CORRELATION_ID
+    MDC.put(CORRELATION_ID_HEADER, correlationId)
+    if (correlationId == NO_CORRELATION_ID) {
+      logger.warn("No correlation ID found in the request headers; using default tag.")
     } else {
-      logger.warn("No correlation ID found in the request headers.")
+      logger.info("Correlation ID set to MDC: $correlationId")
     }
   }
 
