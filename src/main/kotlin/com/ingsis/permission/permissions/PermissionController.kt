@@ -4,8 +4,6 @@ import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -28,9 +26,8 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     }
   }
 
-  @GetMapping("/write")
-  fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt, request: HttpServletRequest): List<String> {
-    val (userId, _) = extractUserInfo(jwt)
+  @GetMapping("/write/{userId}")
+  fun getWritableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get writable snippets for user: $userId")
     val snippets = permissionService.getSnippets(userId, "Write")
@@ -38,9 +35,8 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return snippets
   }
 
-  @GetMapping("/read")
-  fun getReadableSnippets(@AuthenticationPrincipal jwt: Jwt, request: HttpServletRequest): List<String> {
-    val (userId, _) = extractUserInfo(jwt)
+  @GetMapping("/read/{userId}")
+  fun getReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get writable snippets for user: $userId")
     val snippets = permissionService.getSnippets(userId, "Read")
@@ -48,9 +44,8 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return snippets
   }
 
-  @GetMapping("/")
-  fun getWritableAndReadableSnippets(@AuthenticationPrincipal jwt: Jwt, request: HttpServletRequest): List<String> {
-    val (userId, _) = extractUserInfo(jwt)
+  @GetMapping("/{userId}")
+  fun getWritableAndReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get readable and writable snippets for user: $userId")
     val readable = permissionService.getSnippets(userId, "Read")
@@ -74,11 +69,5 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     logger.info("Received request to update write permissions for user: $userId, snippetId: $snippetId, targetUserId: $userId")
     permissionService.updatePermission(userId, snippetId, "Write")
     logger.info("Updated write permissions for snippetId: $snippetId, targetUserId: $userId")
-  }
-
-  private fun extractUserInfo(jwt: Jwt): Pair<String, String> {
-    val userId = jwt.subject
-    val username = jwt.claims["https://snippets/claims/username"]?.toString() ?: "unknown"
-    return Pair(userId, username)
   }
 }
