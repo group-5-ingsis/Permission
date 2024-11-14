@@ -1,11 +1,11 @@
 package com.ingsis.permission.permissions
 
-import com.ingsis.permission.user.UserData
-import com.ingsis.permission.user.UserDto
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -13,7 +13,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
 
   companion object {
     const val CORRELATION_ID_HEADER = "X-Correlation-ID"
-    const val NO_CORRELATION_ID = "No-Correlation-ID" // Tag to indicate no correlation ID was received
+    const val NO_CORRELATION_ID = "No-Correlation-ID"
   }
 
   private val logger = LoggerFactory.getLogger(PermissionController::class.java)
@@ -29,56 +29,56 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   }
 
   @GetMapping("/write")
-  fun getWritableSnippets(@RequestBody userData: UserData, request: HttpServletRequest): List<String> {
+  fun getWritableSnippets(@AuthenticationPrincipal jwt: Jwt, request: HttpServletRequest): List<String> {
+    val (userId, _) = extractUserInfo(jwt)
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to get writable snippets for user: ${userData.username}")
-    val snippets = permissionService.getSnippets(userData.userId, userData.username, "Write")
-    logger.info("Returning writable snippets for user: ${userData.username}, snippets count: ${snippets.size}")
+    logger.info("Received request to get writable snippets for user: $userId")
+    val snippets = permissionService.getSnippets(userId, "Write")
+    logger.info("Returning writable snippets for user: $userId, snippets count: ${snippets.size}")
     return snippets
-  }
-
-  @GetMapping("/users")
-  fun getUsers(request: HttpServletRequest): List<UserDto> {
-    setCorrelationIdFromHeader(request)
-    logger.info("Received request to get users list")
-    val users = permissionService.getUsers()
-    logger.info("Returning users list, count: ${users.size}")
-    return users
-  }
-
-  @GetMapping("/")
-  fun getWritableAndReadableSnippets(@RequestBody userData: UserData, request: HttpServletRequest): List<String> {
-    setCorrelationIdFromHeader(request)
-    logger.info("Received request to get readable and writable snippets for user: ${userData.username}")
-    val readable = permissionService.getSnippets(userData.userId, userData.username, "Read")
-    val writable = permissionService.getSnippets(userData.userId, userData.username, "Write")
-    val allSnippets = readable + writable
-    logger.info("Returning readable and writable snippets for user: ${userData.username}, total count: ${allSnippets.size}")
-    return allSnippets
   }
 
   @GetMapping("/read")
-  fun getReadableSnippets(@RequestBody userData: UserData, request: HttpServletRequest): List<String> {
+  fun getReadableSnippets(@AuthenticationPrincipal jwt: Jwt, request: HttpServletRequest): List<String> {
+    val (userId, _) = extractUserInfo(jwt)
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to get readable snippets for user: ${userData.username}")
-    val snippets = permissionService.getSnippets(userData.userId, userData.username, "Read")
-    logger.info("Returning readable snippets for user: ${userData.username}, snippets count: ${snippets.size}")
+    logger.info("Received request to get writable snippets for user: $userId")
+    val snippets = permissionService.getSnippets(userId, "Read")
+    logger.info("Returning writable snippets for user: $userId, snippets count: ${snippets.size}")
     return snippets
   }
 
-  @PostMapping("/read/{userId}/{snippetId}")
-  fun updateReadPermissions(@RequestBody userData: UserData, @PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+  @GetMapping("/")
+  fun getWritableAndReadableSnippets(@AuthenticationPrincipal jwt: Jwt, request: HttpServletRequest): List<String> {
+    val (userId, _) = extractUserInfo(jwt)
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to update read permissions for user: ${userData.username}, snippetId: $snippetId, targetUserId: $userId")
-    permissionService.updatePermission(userId, userData.username, snippetId, "Read")
+    logger.info("Received request to get readable and writable snippets for user: $userId")
+    val readable = permissionService.getSnippets(userId, "Read")
+    val writable = permissionService.getSnippets(userId, "Write")
+    val allSnippets = readable + writable
+    logger.info("Returning readable and writable snippets for user: $userId, total count: ${allSnippets.size}")
+    return allSnippets
+  }
+
+  @PostMapping("/read/{userId}/{snippetId}")
+  fun updateReadPermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+    setCorrelationIdFromHeader(request)
+    logger.info("Received request to update read permissions for user: $userId, snippetId: $snippetId")
+    permissionService.updatePermission(userId, snippetId, "Read")
     logger.info("Updated read permissions for snippetId: $snippetId, targetUserId: $userId")
   }
 
   @PostMapping("/write/{userId}/{snippetId}")
-  fun updateWritePermissions(@RequestBody userData: UserData, @PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+  fun updateWritePermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to update write permissions for user: ${userData.username}, snippetId: $snippetId, targetUserId: $userId")
-    permissionService.updatePermission(userData.userId, userData.username, snippetId, "Write")
+    logger.info("Received request to update write permissions for user: $userId, snippetId: $snippetId, targetUserId: $userId")
+    permissionService.updatePermission(userId, snippetId, "Write")
     logger.info("Updated write permissions for snippetId: $snippetId, targetUserId: $userId")
+  }
+
+  private fun extractUserInfo(jwt: Jwt): Pair<String, String> {
+    val userId = jwt.subject
+    val username = jwt.claims["https://snippets/claims/username"]?.toString() ?: "unknown"
+    return Pair(userId, username)
   }
 }
