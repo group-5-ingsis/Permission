@@ -2,30 +2,28 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- Standard fields -->
+                <!-- Timestamp in JSON format -->
                 <timestamp>
                     <timeZone>UTC</timeZone>
                 </timestamp>
-                <pattern>
-                    <pattern>thread</pattern>
-                </pattern>
-                <pattern>
-                    <pattern>level</pattern>
-                </pattern>
-                <pattern>
-                    <pattern>logger</pattern>
-                </pattern>
-                <pattern>
-                    <pattern>message</pattern>
-                </pattern>
 
-                <!-- Custom fields -->
+                <!-- Thread name -->
+                <threadName />
+
+                <!-- Log level -->
+                <logLevel />
+
+                <!-- Logger name (class) -->
+                <loggerName />
+
+                <!-- Log message -->
+                <message />
+
+                <!-- MDC (Mapped Diagnostic Context) for custom fields like Correlation-ID -->
                 <mdc />
 
-                <!-- Adding Correlation-ID -->
-                <pattern>
-                    <pattern>[Correlation-ID: %X{X-Correlation-ID}]</pattern>
-                </pattern>
+                <!-- Add Correlation-ID as a separate field -->
+                <customFields>{"Correlation-ID": "%X{X-Correlation-ID}"}</customFields>
             </providers>
         </encoder>
     </appender>
