@@ -4,6 +4,7 @@ import com.ingsis.permission.user.SnippetUser
 import com.ingsis.permission.user.UserDto
 import com.ingsis.permission.user.UserRepository
 import com.ingsis.permission.user.toUserDto
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service
 class PermissionService(
   @Autowired private val userRepository: UserRepository
 ) {
+
+  private val logger = LoggerFactory.getLogger(PermissionController::class.java)
 
   fun getSnippets(userId: String, email: String, type: String): List<String> {
     val user = getOrCreateUser(userId, email)
@@ -38,7 +41,11 @@ class PermissionService(
 
   fun getUsers(): List<UserDto> {
     val users = userRepository.findAll()
-    return users.map { it.toUserDto() }
+    logger.info("Returning users list: $users")
+    return users.map {
+      logger.info("User Name: ${it.username}")
+      it.toUserDto()
+    }
   }
 
   fun updatePermission(userId: String, email: String, snippetId: String, type: String) {
