@@ -17,7 +17,6 @@ class PermissionController(@Autowired private val permissionService: PermissionS
 
   private val logger = LoggerFactory.getLogger(PermissionController::class.java)
 
-  // Function to set the correlation ID from headers to MDC
   private fun setCorrelationIdFromHeader(request: HttpServletRequest) {
     val correlationId = request.getHeader(CORRELATION_ID_HEADER)
     if (correlationId != null) {

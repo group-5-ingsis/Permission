@@ -18,8 +18,8 @@ class PermissionService(
   fun getSnippets(userId: String, username: String, type: String): List<String> {
     val user = getOrCreateUser(userId, username)
     return when (type) {
-      "Read" -> user.readableSnippets
-      "Write" -> user.writableSnippets
+      "read" -> user.readableSnippets
+      "write" -> user.writableSnippets
       else -> emptyList()
     }
   }
@@ -29,10 +29,10 @@ class PermissionService(
     return user
   }
 
-  private fun createUser(userId: String, email: String): SnippetUser {
+  private fun createUser(userId: String, username: String): SnippetUser {
     val newUser = SnippetUser(
       auth0id = userId,
-      username = email,
+      username = username,
       readableSnippets = emptyList(),
       writableSnippets = emptyList()
     )
