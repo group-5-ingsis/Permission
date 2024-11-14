@@ -42,9 +42,17 @@ class PermissionService(
   fun getUsers(): List<UserDto> {
     val users = userRepository.findAll()
     logger.info("Returning users list: $users")
-    return users.map {
+
+    return users.mapNotNull {
       logger.info("User Name: ${it.username}")
-      it.toUserDto()
+
+      if (it.username == null) {
+        logger.info("Deleting user with null username from the database. User ID: ${it.auth0id}")
+        userRepository.delete(it)
+        null  // Return null to exclude this user from the result list
+      } else {
+        it.toUserDto()  // Convert to UserDto if username is not null
+      }
     }
   }
 
