@@ -1,7 +1,32 @@
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger - %msg [Correlation-ID: %X{X-Correlation-ID}]%n</pattern>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <!-- Standard fields -->
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>thread</pattern>
+                </pattern>
+                <pattern>
+                    <pattern>level</pattern>
+                </pattern>
+                <pattern>
+                    <pattern>logger</pattern>
+                </pattern>
+                <pattern>
+                    <pattern>message</pattern>
+                </pattern>
+
+                <!-- Custom fields -->
+                <mdc />
+
+                <!-- Adding Correlation-ID -->
+                <pattern>
+                    <pattern>[Correlation-ID: %X{X-Correlation-ID}]</pattern>
+                </pattern>
+            </providers>
         </encoder>
     </appender>
 
