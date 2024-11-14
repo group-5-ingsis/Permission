@@ -1,5 +1,6 @@
 package com.ingsis.permission.permissions
 
+import com.ingsis.permission.user.SnippetPermissions
 import com.ingsis.permission.user.SnippetPermissionsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -33,7 +34,7 @@ class PermissionService(
 
   fun updatePermission(userId: String, snippetId: String, type: String) {
     val snippetPermissions = snippetPermissionsRepository.findById(snippetId)
-      .orElseThrow { IllegalArgumentException("Snippet with ID $snippetId not found") }
+      .orElse(SnippetPermissions(id = snippetId, readUsers = mutableListOf(), writeUsers = mutableListOf()))
 
     when (type) {
       "Read" -> snippetPermissions.addReadPermission(userId)
