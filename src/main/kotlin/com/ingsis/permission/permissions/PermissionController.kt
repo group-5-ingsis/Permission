@@ -38,9 +38,9 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   @GetMapping("/read/{userId}")
   fun getReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to get writable snippets for user: $userId")
+    logger.info("Received request to get readable snippets for user: $userId")
     val snippets = permissionService.getSnippets(userId, "Read")
-    logger.info("Returning writable snippets for user: $userId, snippets count: ${snippets.size}")
+    logger.info("Returning readable snippets for user: $userId, snippets count: ${snippets.size}")
     return snippets
   }
 

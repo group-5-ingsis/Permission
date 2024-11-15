@@ -1,4 +1,4 @@
-package com.ingsis.permission.user
+package com.ingsis.permission.SnippetPermissions
 
 import org.springframework.data.jpa.repository.JpaRepository
 

@@ -1,7 +1,7 @@
 package com.ingsis.permission.permissions
 
-import com.ingsis.permission.user.SnippetPermissions
-import com.ingsis.permission.user.SnippetPermissionsRepository
+import com.ingsis.permission.SnippetPermissions.SnippetPermissions
+import com.ingsis.permission.SnippetPermissions.SnippetPermissionsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
