@@ -59,7 +59,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun updateReadPermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to update read permissions for user: $userId, snippetId: $snippetId")
-    permissionService.updatePermission(userId, snippetId, "Read")
+    permissionService.updatePermission(userId, snippetId, "read")
     logger.info("Updated read permissions for snippetId: $snippetId, targetUserId: $userId")
   }
 
@@ -67,7 +67,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun updateWritePermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to update write permissions for user: $userId, snippetId: $snippetId, targetUserId: $userId")
-    permissionService.updatePermission(userId, snippetId, "Write")
+    permissionService.updatePermission(userId, snippetId, "write")
     logger.info("Updated write permissions for snippetId: $snippetId, targetUserId: $userId")
   }
 }

@@ -37,8 +37,8 @@ class PermissionService(
       .orElse(SnippetPermissions(id = snippetId, readUsers = mutableListOf(), writeUsers = mutableListOf()))
 
     when (type) {
-      "Read" -> snippetPermissions.addReadPermission(userId)
-      "Write" -> snippetPermissions.addWritePermission(userId)
+      "read" -> snippetPermissions.addReadPermission(userId)
+      "write" -> snippetPermissions.addWritePermission(userId)
       else -> throw IllegalArgumentException("Unknown permission type: $type")
     }
 
