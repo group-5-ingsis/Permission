@@ -1,4 +1,4 @@
-package com.ingsis.permission.SnippetPermissions
+package com.ingsis.permission.snippetPermissions
 
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity

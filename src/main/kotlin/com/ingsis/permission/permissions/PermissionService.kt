@@ -1,7 +1,7 @@
 package com.ingsis.permission.permissions
 
-import com.ingsis.permission.SnippetPermissions.SnippetPermissions
-import com.ingsis.permission.SnippetPermissions.SnippetPermissionsRepository
+import com.ingsis.permission.snippetPermissions.SnippetPermissions
+import com.ingsis.permission.snippetPermissions.SnippetPermissionsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -20,7 +20,7 @@ class PermissionService(
 
   private fun getWritableSnippets(userId: String): List<String> {
     val snippets = snippetPermissionsRepository.findAll()
-      .filter { it.readUsers.contains(userId) }
+      .filter { it.writeUsers.contains(userId) }
       .map { it.id }
     return snippets
   }
