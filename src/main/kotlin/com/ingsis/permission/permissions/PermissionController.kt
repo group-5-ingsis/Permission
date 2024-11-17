@@ -70,4 +70,12 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     permissionService.updatePermission(userId, snippetId, "write")
     logger.info("Updated write permissions for snippetId: $snippetId, targetUserId: $userId")
   }
+
+  @DeleteMapping("/delete/{userId}/{snippetId}")
+  fun deletePermission(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+    setCorrelationIdFromHeader(request)
+    logger.info("Received request to delete permissions for user: $userId, snippetId: $snippetId")
+    permissionService.deletePermission(userId, snippetId)
+    logger.info("Deleted permissions for snippetId: $snippetId, targetUserId: $userId")
+  }
 }

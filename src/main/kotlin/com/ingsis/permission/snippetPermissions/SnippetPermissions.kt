@@ -28,4 +28,12 @@ data class SnippetPermissions(
       writeUsers.add(editorId)
     }
   }
+
+  fun removeReadPermission(editorId: String) {
+    readUsers.remove(editorId)
+  }
+
+  fun removeWritePermission(editorId: String) {
+    writeUsers.remove(editorId)
+  }
 }
