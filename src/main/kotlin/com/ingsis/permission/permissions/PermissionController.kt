@@ -12,6 +12,8 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   companion object {
     const val CORRELATION_ID_HEADER = "X-Correlation-ID"
     const val NO_CORRELATION_ID = "No-Correlation-ID"
+    const val WRITE_PERMISSION = "write"
+    const val READ_PERMISSION = "read"
   }
 
   private val logger = LoggerFactory.getLogger(PermissionController::class.java)
@@ -30,7 +32,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun getWritableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get writable snippets for user: $userId")
-    val snippets = permissionService.getSnippets(userId, "write")
+    val snippets = permissionService.getSnippets(userId, WRITE_PERMISSION)
     logger.info("Returning writable snippets for user: $userId, snippets count: ${snippets.size}")
     return snippets
   }
@@ -39,7 +41,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun getReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get readable snippets for user: $userId")
-    val snippets = permissionService.getSnippets(userId, "read")
+    val snippets = permissionService.getSnippets(userId, READ_PERMISSION)
     logger.info("Returning readable snippets for user: $userId, snippets count: ${snippets.size}")
     return snippets
   }
@@ -48,8 +50,8 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun getWritableAndReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get readable and writable snippets for user: $userId")
-    val readable = permissionService.getSnippets(userId, "read")
-    val writable = permissionService.getSnippets(userId, "write")
+    val readable = permissionService.getSnippets(userId, READ_PERMISSION)
+    val writable = permissionService.getSnippets(userId, WRITE_PERMISSION)
     val allSnippets = readable + writable
     logger.info("Returning readable and writable snippets for user: $userId, total count: ${allSnippets.size}")
     return allSnippets
@@ -59,7 +61,7 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun updateReadPermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to update read permissions for user: $userId, snippetId: $snippetId")
-    permissionService.updatePermission(userId, snippetId, "read")
+    permissionService.updatePermission(userId, snippetId, READ_PERMISSION)
     logger.info("Updated read permissions for snippetId: $snippetId, targetUserId: $userId")
   }
 
@@ -67,15 +69,15 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   fun updateWritePermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to update write permissions for user: $userId, snippetId: $snippetId, targetUserId: $userId")
-    permissionService.updatePermission(userId, snippetId, "write")
+    permissionService.updatePermission(userId, snippetId, WRITE_PERMISSION)
     logger.info("Updated write permissions for snippetId: $snippetId, targetUserId: $userId")
   }
 
-  @DeleteMapping("/delete/{userId}/{snippetId}")
-  fun deletePermission(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+  @DeleteMapping("/{snippetId}")
+  fun deleteSnippet(@PathVariable snippetId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to delete permissions for user: $userId, snippetId: $snippetId")
-    permissionService.deletePermission(userId, snippetId)
-    logger.info("Deleted permissions for snippetId: $snippetId, targetUserId: $userId")
+    logger.info("Received request to delete snippetId: $snippetId")
+    permissionService.deleteSnippet(snippetId)
+    logger.info("Deleted snippet with id: $snippetId")
   }
 }

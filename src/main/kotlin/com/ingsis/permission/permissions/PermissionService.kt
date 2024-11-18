@@ -48,16 +48,11 @@ class PermissionService(
     snippetPermissionsRepository.save(snippetPermissions)
   }
 
-  fun deletePermission(userId: String, snippetId: String) {
-    val snippetPermissions = snippetPermissionsRepository.findById(snippetId)
-      .orElse(SnippetPermissions(id = snippetId, readUsers = mutableListOf(), writeUsers = mutableListOf()))
+  fun deleteSnippet(snippetId: String) {
+    val snippet = snippetPermissionsRepository.findById(snippetId).orElse(null)
 
-    snippetPermissions.removeReadPermission(userId)
-    snippetPermissions.removeWritePermission(userId)
+    snippetPermissionsRepository.delete(snippet)
 
-
-
-    snippetPermissionsRepository.delete(snippetPermissions)
-    logger.info("Deleted permissions for user: $userId, snippetId: $snippetId")
+    logger.info("Deleted snippet with snippetId: $snippetId")
   }
 }
