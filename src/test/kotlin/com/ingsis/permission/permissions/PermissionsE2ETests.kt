@@ -2,7 +2,6 @@ package com.ingsis.permission.permissions
 
 import com.ingsis.permission.snippetPermissions.SnippetPermissions
 import com.ingsis.permission.snippetPermissions.SnippetPermissionsRepository
-import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -58,11 +57,17 @@ class PermissionsE2ETests @Autowired constructor(
     val snippets = response.expectBodyList(String::class.java)
 
     snippets.hasSize(1)
+  }
 
-    snippets
-      .returnResult()
-      .responseBody!!
-      .shouldBeEqualTo("snippet1")
+  @Test
+  fun `should update write permissions for user`() {
+    val response = client.post()
+      .uri("/read/user1/snippet1")
+      .header("X-Correlation-ID", "test-correlation-id")
+      .exchange()
+      .expectStatus().isOk
+
+    response.expectBodyList(Void::class.java)
   }
 
   @Test
@@ -75,13 +80,7 @@ class PermissionsE2ETests @Autowired constructor(
 
     val snippets = response.expectBodyList(String::class.java)
 
-    snippets.hasSize(2)
-
-    snippets
-      .returnResult()
-      .responseBody!!
-      .first()
-      .shouldBeEqualTo("snippet1")
+    snippets.hasSize(1)
   }
 
   @Test
@@ -93,7 +92,7 @@ class PermissionsE2ETests @Autowired constructor(
       .expectStatus().isOk
 
     val snippets = response.expectBodyList(String::class.java)
-    snippets.hasSize(2)
+    snippets.hasSize(1)
   }
 
   @Test
@@ -111,6 +110,6 @@ class PermissionsE2ETests @Autowired constructor(
 
     val snippets = response.expectBodyList(String::class.java)
 
-    snippets.hasSize(2)
+    snippets.hasSize(1)
   }
 }

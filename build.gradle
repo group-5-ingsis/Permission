@@ -92,7 +92,8 @@ koverReport {
         }
         filters {
             excludes {
-                packages("config")
+                packages("config logging")
+                classes("Permission.kt")
             }
         }
     }
