@@ -2,6 +2,7 @@ package com.ingsis.permission.snippetPermissions
 
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 
 @Entity
@@ -9,10 +10,10 @@ data class SnippetPermissions(
   @Id
   var id: String,
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   var readUsers: MutableList<String> = mutableListOf(),
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   var writeUsers: MutableList<String> = mutableListOf()
 ) {
   constructor() : this(id = "")
@@ -27,13 +28,5 @@ data class SnippetPermissions(
     if (!writeUsers.contains(editorId)) {
       writeUsers.add(editorId)
     }
-  }
-
-  fun removeReadPermission(editorId: String) {
-    readUsers.remove(editorId)
-  }
-
-  fun removeWritePermission(editorId: String) {
-    writeUsers.remove(editorId)
   }
 }
