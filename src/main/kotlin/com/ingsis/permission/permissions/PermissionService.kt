@@ -1,5 +1,7 @@
 package com.ingsis.permission.permissions
 
+import com.ingsis.permission.permissions.PermissionController.Companion.READ_PERMISSION
+import com.ingsis.permission.permissions.PermissionController.Companion.WRITE_PERMISSION
 import com.ingsis.permission.snippetPermissions.SnippetPermissions
 import com.ingsis.permission.snippetPermissions.SnippetPermissionsRepository
 import org.slf4j.LoggerFactory
@@ -54,5 +56,19 @@ class PermissionService(
     snippetPermissionsRepository.delete(snippet)
 
     logger.info("Deleted snippet with snippetId: $snippetId")
+  }
+
+  fun removePermissions(snippetId: String, userId: String, type: String) {
+    val snippet = snippetPermissionsRepository.findById(snippetId).orElse(null)
+      ?: throw IllegalArgumentException("Snippet with ID $snippetId not found")
+
+    when (type) {
+      READ_PERMISSION -> snippet.readUsers.remove(userId)
+      WRITE_PERMISSION -> snippet.writeUsers.remove(userId)
+      else -> throw IllegalArgumentException("Unknown permission type: $type")
+    }
+
+    snippetPermissionsRepository.save(snippet)
+    logger.info("Removed $type permission for user $userId from snippet with snippetId: $snippetId")
   }
 }

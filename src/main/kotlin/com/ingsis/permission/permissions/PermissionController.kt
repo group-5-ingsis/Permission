@@ -80,4 +80,12 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     permissionService.deleteSnippet(snippetId)
     logger.info("Deleted snippet with id: $snippetId")
   }
+
+  @DeleteMapping("/read/{snippetId}/{userId}")
+  fun removePermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+    setCorrelationIdFromHeader(request)
+    logger.info("Received request to remove permissions for $userId for snippetId: $snippetId")
+    permissionService.removePermissions(snippetId, userId, READ_PERMISSION)
+    logger.info("Removed permissions for $userId for snippet with id: $snippetId")
+  }
 }
