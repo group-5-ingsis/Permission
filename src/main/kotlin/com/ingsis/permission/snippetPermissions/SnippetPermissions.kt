@@ -26,7 +26,7 @@ data class SnippetPermissions(
     }
 
     object Operation {
-      const val REMOVE = "delete"
+      const val REMOVE = "remove"
       const val ADD = "add"
     }
   }
