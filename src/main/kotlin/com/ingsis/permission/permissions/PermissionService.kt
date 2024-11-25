@@ -29,6 +29,10 @@ class PermissionService(
       .map { it.id }
   }
 
+  fun deleteSnippet(snippetId: String) {
+    snippetPermissionsRepository.deleteById(snippetId)
+  }
+
   private fun getOrCreateSnippetPermissions(snippetId: String): SnippetPermissions {
     return snippetPermissionsRepository.findById(snippetId)
       .orElse(SnippetPermissions(id = snippetId, readUsers = mutableListOf(), writeUsers = mutableListOf()))

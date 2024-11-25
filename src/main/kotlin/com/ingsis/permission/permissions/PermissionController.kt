@@ -1,7 +1,5 @@
 package com.ingsis.permission.permissions
 
-import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.READ
-import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.WRITE
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -37,17 +35,6 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return snippets
   }
 
-  @GetMapping("/{userId}")
-  fun getUserSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
-    setCorrelationIdFromHeader(request)
-    log("Received request to get readable and writable snippets for user: $userId")
-    val readable = permissionService.getSnippets(userId, READ)
-    val writable = permissionService.getSnippets(userId, WRITE)
-    val allSnippets = readable + writable
-    log("Returning readable and writable snippets for user: $userId, total count: ${allSnippets.size}")
-    return allSnippets
-  }
-
   @PostMapping("/{type}/{operation}/{userId}/{snippetId}")
   fun updatePermissions(@PathVariable type: String, @PathVariable operation: String, @PathVariable userId: String, @PathVariable snippetId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
@@ -61,9 +48,17 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   @GetMapping("/{type}/{snippetId}/{userId}")
   fun hasPermission(@PathVariable type: String, @PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest): Boolean {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to delete snippetId: $snippetId")
+    logger.info("Checking if user: $userId has permissions to $type snippet: $snippetId")
     val snippetUser = SnippetUser(snippetId, userId)
     return permissionService.hasPermission(snippetUser, type)
+  }
+
+  @DeleteMapping("/{snippetId}")
+  fun deleteSnippet(@PathVariable snippetId: String, request: HttpServletRequest) {
+    setCorrelationIdFromHeader(request)
+    logger.info("Received request to delete snippetId: $snippetId")
+    permissionService.deleteSnippet(snippetId)
+    logger.info("Successfully deleted snippet with id: $snippetId")
   }
 
   private fun log(message: String) {
