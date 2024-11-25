@@ -1,18 +1,20 @@
 package com.ingsis.permission.permissions
 
 import com.ingsis.permission.snippetPermissions.SnippetPermissions
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.Operation.ADD
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.READ
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.WRITE
 import com.ingsis.permission.snippetPermissions.SnippetPermissionsRepository
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.Mockito.*
+import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertTrue
 
 @ExtendWith(MockitoExtension::class)
-class PermissionServiceTestUpdatePermission {
+class PermissionServiceTestUpdatePermissionChange {
 
   @Mock
   private lateinit var snippetPermissionsRepository: SnippetPermissionsRepository
@@ -28,7 +30,10 @@ class PermissionServiceTestUpdatePermission {
 
     `when`(snippetPermissionsRepository.findById(snippetId)).thenReturn(java.util.Optional.of(snippetPermissions))
 
-    permissionService.updatePermission(userId, snippetId, "read")
+    val snippetUser = SnippetUser(userId = userId, snippetId = snippetId)
+    val permissionChange = PermissionChange(READ, ADD)
+
+    permissionService.updatePermissions(snippetUser, permissionChange)
 
     verify(snippetPermissionsRepository).save(snippetPermissions)
     assertTrue(snippetPermissions.readUsers.contains(userId))
@@ -42,24 +47,12 @@ class PermissionServiceTestUpdatePermission {
 
     `when`(snippetPermissionsRepository.findById(snippetId)).thenReturn(java.util.Optional.of(snippetPermissions))
 
-    permissionService.updatePermission(userId, snippetId, "write")
+    val snippetUser = SnippetUser(userId = userId, snippetId = snippetId)
+    val permissionChange = PermissionChange(permissionType = WRITE, ADD)
+
+    permissionService.updatePermissions(snippetUser, permissionChange)
 
     verify(snippetPermissionsRepository).save(snippetPermissions)
     assertTrue(snippetPermissions.writeUsers.contains(userId))
-  }
-
-  @Test
-  fun `updatePermission should throw IllegalArgumentException for unknown type`() {
-    val snippetId = "snippet1"
-    val userId = "user1"
-    val snippetPermissions = SnippetPermissions(id = snippetId)
-
-    `when`(snippetPermissionsRepository.findById(snippetId)).thenReturn(java.util.Optional.of(snippetPermissions))
-
-    val exception = assertThrows<IllegalArgumentException> {
-      permissionService.updatePermission(userId, snippetId, "unknown")
-    }
-
-    assertTrue(exception.message!!.contains("Unknown permission type: unknown"))
   }
 }

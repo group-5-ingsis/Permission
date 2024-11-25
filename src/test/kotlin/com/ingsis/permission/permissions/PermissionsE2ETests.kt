@@ -1,6 +1,9 @@
 package com.ingsis.permission.permissions
 
 import com.ingsis.permission.snippetPermissions.SnippetPermissions
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.Operation.ADD
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.READ
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.WRITE
 import com.ingsis.permission.snippetPermissions.SnippetPermissionsRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -25,14 +28,14 @@ class PermissionsE2ETests @Autowired constructor(
   @BeforeEach
   fun setup() {
     val snippet1 = SnippetPermissions("snippet1")
-    snippet1.addReadPermission("user1")
-    snippet1.addWritePermission("user1")
+    snippet1.updatePermission("user1", PermissionChange(permissionType = READ, ADD))
+    snippet1.updatePermission("user1", PermissionChange(permissionType = WRITE, ADD))
     snippetPermissionsRepository.save(snippet1)
 
     val snippet2 = SnippetPermissions("snippet2")
-    snippet2.addReadPermission("user1")
-    snippet2.addReadPermission("user2")
-    snippet2.addWritePermission("user2")
+    snippet1.updatePermission("user1", PermissionChange(permissionType = READ, ADD))
+    snippet1.updatePermission("user1", PermissionChange(permissionType = READ, ADD))
+    snippet1.updatePermission("user1", PermissionChange(permissionType = WRITE, ADD))
     snippetPermissionsRepository.save(snippet2)
 
     snippetPermissionsRepository.findAll().forEach {
@@ -62,7 +65,7 @@ class PermissionsE2ETests @Autowired constructor(
   @Test
   fun `should update write permissions for user`() {
     val response = client.post()
-      .uri("/read/user1/snippet1")
+      .uri("/read/add/user1/snippet1")
       .header("X-Correlation-ID", "test-correlation-id")
       .exchange()
       .expectStatus().isOk
@@ -92,24 +95,6 @@ class PermissionsE2ETests @Autowired constructor(
       .expectStatus().isOk
 
     val snippets = response.expectBodyList(String::class.java)
-    snippets.hasSize(1)
-  }
-
-  @Test
-  fun `should delete a snippet`() {
-    client.delete()
-      .uri("/snippet1")
-      .header("X-Correlation-ID", "test-correlation-id")
-      .exchange()
-      .expectStatus().isOk
-
-    val response = client.get()
-      .uri("/read/user1")
-      .exchange()
-      .expectStatus().isOk
-
-    val snippets = response.expectBodyList(String::class.java)
-
     snippets.hasSize(1)
   }
 }

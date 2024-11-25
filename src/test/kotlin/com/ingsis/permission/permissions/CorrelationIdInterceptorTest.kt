@@ -7,6 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentCaptor
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.eq
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.slf4j.MDC
 import org.springframework.http.HttpHeaders
@@ -16,9 +19,6 @@ import org.springframework.http.client.ClientHttpResponse
 import org.springframework.http.client.support.HttpRequestWrapper
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.eq
 
 @ExtendWith(MockitoExtension::class)
 class CorrelationIdInterceptorTest {

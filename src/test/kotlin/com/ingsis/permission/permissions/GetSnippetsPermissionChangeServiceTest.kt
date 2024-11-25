@@ -1,16 +1,18 @@
 package com.ingsis.permission.permissions
 import com.ingsis.permission.snippetPermissions.SnippetPermissions
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.READ
+import com.ingsis.permission.snippetPermissions.SnippetPermissions.Companion.PermissionType.WRITE
 import com.ingsis.permission.snippetPermissions.SnippetPermissionsRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.Mockito.*
+import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
-class GetSnippetsPermissionServiceTest {
+class GetSnippetsPermissionChangeServiceTest {
 
   @Mock
   private lateinit var snippetPermissionsRepository: SnippetPermissionsRepository
@@ -28,7 +30,7 @@ class GetSnippetsPermissionServiceTest {
 
     `when`(snippetPermissionsRepository.findAll()).thenReturn(snippetPermissions)
 
-    val result = permissionService.getSnippets(userId, "read")
+    val result = permissionService.getSnippets(userId, READ)
 
     assertEquals(listOf("snippet1"), result)
   }
@@ -43,17 +45,8 @@ class GetSnippetsPermissionServiceTest {
 
     `when`(snippetPermissionsRepository.findAll()).thenReturn(snippetPermissions)
 
-    val result = permissionService.getSnippets(userId, "write")
+    val result = permissionService.getSnippets(userId, WRITE)
 
     assertEquals(listOf("snippet1"), result)
-  }
-
-  @Test
-  fun `getSnippets should return empty list for unknown type`() {
-    val userId = "user1"
-
-    val result = permissionService.getSnippets(userId, "unknown")
-
-    assertEquals(emptyList<String>(), result)
   }
 }
