@@ -35,6 +35,17 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     return snippets
   }
 
+  @GetMapping("/{userId}")
+  fun getAllSnippetsForUser(@PathVariable userId: String, request: HttpServletRequest): List<String> {
+    setCorrelationIdFromHeader(request)
+    logger.info("Received request to get readable and writable snippets for user: $userId")
+    val readable = permissionService.getSnippets(userId, "read")
+    val writable = permissionService.getSnippets(userId, "write")
+    val allSnippets = readable + writable
+    logger.info("Returning readable and writable snippets for user: $userId, total count: ${allSnippets.size}")
+    return allSnippets
+  }
+
   @PostMapping("/{type}/{operation}/{userId}/{snippetId}")
   fun updatePermissions(@PathVariable type: String, @PathVariable operation: String, @PathVariable userId: String, @PathVariable snippetId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
