@@ -12,8 +12,6 @@ class PermissionController(@Autowired private val permissionService: PermissionS
   companion object {
     const val CORRELATION_ID_HEADER = "X-Correlation-ID"
     const val NO_CORRELATION_ID = "No-Correlation-ID"
-    const val WRITE_PERMISSION = "write"
-    const val READ_PERMISSION = "read"
   }
 
   private val logger = LoggerFactory.getLogger(PermissionController::class.java)
@@ -22,55 +20,48 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     val correlationId = request.getHeader(CORRELATION_ID_HEADER) ?: NO_CORRELATION_ID
     MDC.put(CORRELATION_ID_HEADER, correlationId)
     if (correlationId == NO_CORRELATION_ID) {
-      logger.warn("No correlation ID found in the request headers; using default tag.")
+      log("No correlation ID found in the request headers; using default tag.")
     } else {
-      logger.info("Correlation ID set to MDC: $correlationId")
+      log("Correlation ID set to MDC: $correlationId")
     }
   }
 
-  @GetMapping("/write/{userId}")
-  fun getWritableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
+  @GetMapping("/{type}/{userId}")
+  fun getUserSnippetsOfType(@PathVariable type: String, @PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to get writable snippets for user: $userId")
-    val snippets = permissionService.getSnippets(userId, WRITE_PERMISSION)
-    logger.info("Returning writable snippets for user: $userId, snippets count: ${snippets.size}")
-    return snippets
-  }
-
-  @GetMapping("/read/{userId}")
-  fun getReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
-    setCorrelationIdFromHeader(request)
-    logger.info("Received request to get readable snippets for user: $userId")
-    val snippets = permissionService.getSnippets(userId, READ_PERMISSION)
-    logger.info("Returning readable snippets for user: $userId, snippets count: ${snippets.size}")
+    log("Received request to get readable snippets for user: $userId")
+    val snippets = permissionService.getSnippets(userId, type)
+    log("Returning readable snippets for user: $userId, snippets count: ${snippets.size}")
     return snippets
   }
 
   @GetMapping("/{userId}")
-  fun getWritableAndReadableSnippets(@PathVariable userId: String, request: HttpServletRequest): List<String> {
+  fun getAllSnippetsForUser(@PathVariable userId: String, request: HttpServletRequest): List<String> {
     setCorrelationIdFromHeader(request)
     logger.info("Received request to get readable and writable snippets for user: $userId")
-    val readable = permissionService.getSnippets(userId, READ_PERMISSION)
-    val writable = permissionService.getSnippets(userId, WRITE_PERMISSION)
+    val readable = permissionService.getSnippets(userId, "read")
+    val writable = permissionService.getSnippets(userId, "write")
     val allSnippets = readable + writable
     logger.info("Returning readable and writable snippets for user: $userId, total count: ${allSnippets.size}")
     return allSnippets
   }
 
-  @PostMapping("/read/{userId}/{snippetId}")
-  fun updateReadPermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+  @PostMapping("/{type}/{operation}/{userId}/{snippetId}")
+  fun updatePermissions(@PathVariable type: String, @PathVariable operation: String, @PathVariable userId: String, @PathVariable snippetId: String, request: HttpServletRequest) {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to update read permissions for user: $userId, snippetId: $snippetId")
-    permissionService.updatePermission(userId, snippetId, READ_PERMISSION)
-    logger.info("Updated read permissions for snippetId: $snippetId, targetUserId: $userId")
+    log("Received request to update read permissions for user: $userId, snippetId: $snippetId")
+    val snippetUser = SnippetUser(snippetId, userId)
+    val newPermissionChange = PermissionChange(type, operation)
+    permissionService.updatePermissions(snippetUser, newPermissionChange)
+    log("Updated read permissions for snippetId: $snippetId, targetUserId: $userId")
   }
 
-  @PostMapping("/write/{userId}/{snippetId}")
-  fun updateWritePermissions(@PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest) {
+  @GetMapping("/{type}/{snippetId}/{userId}")
+  fun hasPermission(@PathVariable type: String, @PathVariable snippetId: String, @PathVariable userId: String, request: HttpServletRequest): Boolean {
     setCorrelationIdFromHeader(request)
-    logger.info("Received request to update write permissions for user: $userId, snippetId: $snippetId, targetUserId: $userId")
-    permissionService.updatePermission(userId, snippetId, WRITE_PERMISSION)
-    logger.info("Updated write permissions for snippetId: $snippetId, targetUserId: $userId")
+    logger.info("Checking if user: $userId has permissions to $type snippet: $snippetId")
+    val snippetUser = SnippetUser(snippetId, userId)
+    return permissionService.hasPermission(snippetUser, type)
   }
 
   @DeleteMapping("/{snippetId}")
@@ -78,6 +69,10 @@ class PermissionController(@Autowired private val permissionService: PermissionS
     setCorrelationIdFromHeader(request)
     logger.info("Received request to delete snippetId: $snippetId")
     permissionService.deleteSnippet(snippetId)
-    logger.info("Deleted snippet with id: $snippetId")
+    logger.info("Successfully deleted snippet with id: $snippetId")
+  }
+
+  private fun log(message: String) {
+    logger.info(message)
   }
 }
